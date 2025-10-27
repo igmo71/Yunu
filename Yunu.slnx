@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="Yunu.Api/Yunu.Api.csproj" />
+  <Project Path="Yunu.AppHost/Yunu.AppHost.csproj" />
+  <Project Path="Yunu.ServiceDefaults/Yunu.ServiceDefaults.csproj" />
+</Solution>

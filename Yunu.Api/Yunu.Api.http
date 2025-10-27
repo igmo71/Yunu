@@ -1,0 +1,6 @@
+@Yunu.Api_HostAddress = http://localhost:5051
+
+GET {{Yunu.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
