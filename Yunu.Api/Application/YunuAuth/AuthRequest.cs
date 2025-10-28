@@ -4,7 +4,6 @@ namespace Yunu.Api.Application.YunuAuth;
 
 public record LoginRequest(string Login, string Password);
 
-
 public class RefreshTokenRequest
 {
     [JsonPropertyName("refresh_token")]

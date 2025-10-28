@@ -59,16 +59,14 @@ namespace Yunu.Api.Application.YunuAuth
 
                 if (!authResponse.IsSuccessStatusCode)
                 {
-                    if (_logger.IsEnabled(LogLevel.Error))
-                        _logger.LogError("{Source} {ResponseContent}", source, responseContent);
+                    _logger.LogError("{Source} {ResponseContent}", source, responseContent);
                     return false;
                 }
                 _authState = JsonSerializer.Deserialize<AuthState>(responseContent);
             }
             catch (Exception ex)
             {
-                if (_logger.IsEnabled(LogLevel.Error))
-                    _logger.LogError(ex, "{Source} {Exception}", source, ex.Message);
+                _logger.LogError(ex, "{Source}", source);
                 return false;
             }
 
@@ -82,8 +80,7 @@ namespace Yunu.Api.Application.YunuAuth
             {
                 if (_authState is null)
                 {
-                    if (_logger.IsEnabled(LogLevel.Error))
-                        _logger.LogError("{Source} AuthState Is Null", source);
+                    _logger.LogError("{Source} AuthState Is Null", source);
                     return false;
                 }
 
@@ -108,17 +105,15 @@ namespace Yunu.Api.Application.YunuAuth
 
                 if (!authResponse.IsSuccessStatusCode)
                 {
-                    if (_logger.IsEnabled(LogLevel.Error))
-                        _logger.LogError("{Source} {ResponseContent}", source, responseContent);
+                    _logger.LogError("{Source} {ResponseContent}", source, responseContent);
                     return false;
                 }
 
                 var refreshTokenResponse = JsonSerializer.Deserialize<RefreshTokenResponse>(responseContent);
 
-                if(refreshTokenResponse is null)
+                if (refreshTokenResponse is null)
                 {
-                    if (_logger.IsEnabled(LogLevel.Error))
-                        _logger.LogError("{Source} RefreshTokenResponse Deserialize Failed", source);
+                    _logger.LogError("{Source} RefreshTokenResponse Deserialize Failed", source);
                     return false;
                 }
                 _authState.Result.Token = refreshTokenResponse.Token;
@@ -128,8 +123,7 @@ namespace Yunu.Api.Application.YunuAuth
             }
             catch (Exception ex)
             {
-                if (_logger.IsEnabled(LogLevel.Error))
-                    _logger.LogError(ex, "{Source} {Exception}", nameof(RefreshTockenAsync), ex.Message);
+                _logger.LogError(ex, "{Source}", nameof(RefreshTockenAsync));
                 return false;
             }
 
@@ -142,18 +136,15 @@ namespace Yunu.Api.Application.YunuAuth
 
             if (_authState is null)
                 if (!await LoginAsync())
-                    if (_logger.IsEnabled(LogLevel.Error))
-                        _logger.LogError("{Source} Login Failed", source);
+                    _logger.LogError("{Source} Login Failed", source);
 
             if (_authState is not null && DateTime.Now > _authState.Result.LifeTime)
-                if(!await RefreshTockenAsync())
-                    if (_logger.IsEnabled(LogLevel.Error))
-                        _logger.LogError("{Source} Refresh Tocken Failed", source);
+                if (!await RefreshTockenAsync())
+                    _logger.LogError("{Source} Refresh Tocken Failed", source);
 
             if (_authState is null)
             {
-                if (_logger.IsEnabled(LogLevel.Error))
-                    _logger.LogError("{Source} Login and Refresh Tocken Failed", source);
+                _logger.LogError("{Source} Login and Refresh Tocken Failed", source);
                 throw new InvalidOperationException("Yunu Login and Refresh Tocken Failed");
             }
             return _authState.Result.Token;

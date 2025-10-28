@@ -1,16 +1,17 @@
-﻿namespace Yunu.Api.Domain;
+﻿using System.Diagnostics.CodeAnalysis;
 
-[System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>")]
+namespace Yunu.Api.Domain;
+
+[SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>")]
 public class ProductList
 {
-
-    public Product[]? list { get; set; }
+    public List<Product>? list { get; set; }
     public int total { get; set; }
     public string? exportLink { get; set; }
     public string? templateMassCreateLink { get; set; }
 }
 
-[System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>")]
+[SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>")]
 public class Product
 {
     public int id { get; set; }
@@ -22,8 +23,8 @@ public class Product
     public int price { get; set; }
     public int oldPrice { get; set; }
     public int quantity { get; set; }
-    public Fbo_Stock? fbo_stock { get; set; }
-    public Fbo_Stocks? fbo_stocks { get; set; }
+    public Product_Fbo_Stock? fbo_stock { get; set; }
+    public Product_Fbo_Stocks? fbo_stocks { get; set; }
     public string? photo { get; set; }
     public int reserve { get; set; }
     public int marriage { get; set; }
@@ -51,7 +52,7 @@ public class Product
     public string? commission_fbo { get; set; }
     public int comission { get; set; }
     public float weight { get; set; }
-    public Marketplaces? marketplaces { get; set; }
+    public Product_Marketplaces? marketplaces { get; set; }
     public float? foreign_purchase_price { get; set; }
     public string? foreign_purchase_price_currency_symbol { get; set; }
     public float? foreign_delivery_price { get; set; }
@@ -59,32 +60,48 @@ public class Product
     public float calculated_purchase_price { get; set; }
 }
 
-[System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>")]
-public class Fbo_Stock
+[SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>")]
+public class Product_Fbo_Stock
 {
+    public int ProductId { get; set; } // My Key
+
     public int total { get; set; }
-    public By_Delivery_Type[]? by_delivery_type { get; set; }
+    public List<Product_Fbo_Stock_By_Delivery_Type>? by_delivery_type { get; set; }
 }
 
-[System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>")]
-public class By_Delivery_Type
+[SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>")]
+public class Product_Fbo_Stock_By_Delivery_Type
 {
+    public int ProductId { get; set; } // My Key
+
     public string? delivery_type_name { get; set; }
     public string? delivery_type_color { get; set; }
     public int quantity { get; set; }
 }
 
-[System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>")]
-public class Fbo_Stocks
+[SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>")]
+public class Product_Fbo_Stocks
 {
+    public int ProductId { get; set; } // My Key
+
     public int total { get; set; }
-    public By_Delivery_Type[]? by_delivery_type { get; set; }
+    public List<Product_Fbo_Stocks_By_Delivery_Type>? by_delivery_type { get; set; }
 }
 
-
-
-public class Marketplaces
+[SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>")]
+public class Product_Fbo_Stocks_By_Delivery_Type
 {
+    public int ProductId { get; set; } // My Key
+
+    public string? delivery_type_name { get; set; }
+    public string? delivery_type_color { get; set; }
+    public int quantity { get; set; }
+}
+
+public class Product_Marketplaces
+{
+    public int ProductId { get; set; } // My Key
+
     public string? YANDEX_MARKET_FBS { get; set; }
     public string? YANDEX_MARKET_FBS_FAST { get; set; }
     public string? WILDBERRIES_FBS { get; set; }

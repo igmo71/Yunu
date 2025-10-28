@@ -15,15 +15,15 @@ namespace Yunu.Api.Endpoints
             return builder;
         }
 
-        private static async Task<ProductList?> GetProductList(
-            [FromServices] IYunuClient apiClient,
+        private static async Task<string?> GetProductList(
+            [FromServices] IYunuService yunuService,
             [FromQuery] int page = 0,
             [FromQuery] int perPage = 500,
             [FromQuery] int? scopeId = null)
         {
-            var result = await apiClient.GetProductListAsync(page, perPage, scopeId);
+            var result = await yunuService.LoadProductListAsync(page, perPage, scopeId);
 
-            return result;
+            return $"Loaded: {result}";
         }
     }
 }

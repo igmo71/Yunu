@@ -8,7 +8,7 @@ namespace Yunu.Api.Application
 {
     public interface IYunuClient
     {
-        Task<ProductList?> GetProductListAsync(int page = 0, int perPage = 500, int? scopeId = null);
+        Task<ProductList?> GetProductListAsync(int page, int perPage, int? scopeId);
     }
 
     public class YunuClient : IYunuClient
@@ -30,27 +30,35 @@ namespace Yunu.Api.Application
             _httpClient.DefaultRequestHeaders.Add(HeaderNames.Accept, "application/json");
         }
 
-        public async Task<ProductList?> GetProductListAsync(int page = 0, int perPage = 500, int? scopeId = null)
+        public async Task<ProductList?> GetProductListAsync(int page, int perPage, int? scopeId)
         {
-            var queryParams = new Dictionary<string, string?>
+            var source = nameof(GetProductListAsync);
+            try
             {
-                ["page"] = page.ToString(),
-                ["perPage"] = perPage.ToString(),
-                ["scopeId"] = scopeId is not null ? scopeId.ToString() : _yunuConfig.ScopeId.ToString(),
-            };
-            var uri = QueryHelpers.AddQueryString($"{Prefix}{ProductListUri}", queryParams);
+                var queryParams = new Dictionary<string, string?>
+                {
+                    ["page"] = page.ToString(),
+                    ["perPage"] = perPage.ToString(),
+                    ["scopeId"] = scopeId is not null ? scopeId.ToString() : _yunuConfig.ScopeId.ToString(),
+                };
+                var uri = QueryHelpers.AddQueryString($"{Prefix}{ProductListUri}", queryParams);
 
-            var response = await _httpClient.GetAsync(uri);
+                var response = await _httpClient.GetAsync(uri);
 
-            var responseContent = await response.Content.ReadAsStringAsync();
+                var responseContent = await response.Content.ReadAsStringAsync();
 
-            if(!response.IsSuccessStatusCode)
-                if (_logger.IsEnabled(LogLevel.Error))
-                    _logger.LogError("{Source} {ResponseContent}", nameof(GetProductListAsync), responseContent);
+                if (!response.IsSuccessStatusCode)
+                    _logger.LogError("{Source} {ResponseContent}", source, responseContent);
 
-            var result = JsonSerializer.Deserialize<ProductList>(responseContent);
+                var result = JsonSerializer.Deserialize<ProductList>(responseContent);
 
-            return result;
+                return result;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "{Source}", source);
+                throw;
+            }
         }
     }
 }

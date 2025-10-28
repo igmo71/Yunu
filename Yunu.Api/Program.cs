@@ -1,8 +1,10 @@
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Scalar.AspNetCore;
 using Yunu.Api.Application;
 using Yunu.Api.Application.YunuAuth;
 using Yunu.Api.Endpoints;
+using Yunu.Api.Infrastructure.Data;
 
 namespace Yunu.Api;
 
@@ -19,6 +21,15 @@ public class Program
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
         builder.Services.AddOpenApi();
 
+        builder.Services.AddProblemDetails();
+
+        var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
+            ?? throw new InvalidOperationException("DefaultConnection Not Found");
+
+        builder.Services.AddDbContext<AppDbContext>(options =>
+            options.UseSqlServer(connectionString)
+                .EnableSensitiveDataLogging());
+
         builder.Services.Configure<YunuConfig>(builder.Configuration.GetSection(YunuConfig.Section));
 
         builder.Services.AddSingleton<IYunuAuthService, AuthService>();
@@ -27,6 +38,8 @@ public class Program
 
         builder.Services.AddHttpClient<IYunuClient, YunuClient>()
             .AddHttpMessageHandler<AuthHeaderHandler>();
+
+        builder.Services.AddScoped<IYunuService, YunuService>();
 
         var app = builder.Build();
 
@@ -58,7 +71,7 @@ public class Program
 
         app.MapGet("/weatherforecast", (HttpContext httpContext) =>
         {
-            var forecast =  Enumerable.Range(1, 5).Select(index =>
+            var forecast = Enumerable.Range(1, 5).Select(index =>
                 new WeatherForecast
                 {
                     Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
