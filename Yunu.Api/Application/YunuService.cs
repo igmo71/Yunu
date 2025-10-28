@@ -5,6 +5,7 @@ namespace Yunu.Api.Application
 {
     public interface IYunuService
     {
+        Task<int> LoadCategoryTreeAsync();
         Task<int> LoadProductListAsync(int page, int perPage, int? scopeId);
     }
 
@@ -13,6 +14,25 @@ namespace Yunu.Api.Application
         private readonly IYunuClient _yunuClient = yunuClient;
         private readonly AppDbContext _dbContext = dbContext;
         private readonly ILogger<YunuService> _logger = logger;
+
+        public async Task<int> LoadCategoryTreeAsync()
+        {
+            var source = nameof(LoadCategoryTreeAsync);
+
+            var categoryTree = await _yunuClient.GetCategoryTreeAsync();
+
+            if (categoryTree is null || categoryTree.tree is null || categoryTree.tree.Count == 0)
+            {
+                _logger.LogError("{Source} Loading Category Tree Failed", source);
+                return 0;
+            }
+            await _dbContext.Category.AddRangeAsync(categoryTree.tree);
+
+            var result = await _dbContext.SaveChangesAsync();
+
+            return result;
+
+        }
 
         public async Task<int> LoadProductListAsync(int page, int perPage, int? scopeId)
         {
@@ -41,12 +61,9 @@ namespace Yunu.Api.Application
                         by_delivery_type.ProductId = product.id;
             }
 
-            //using var transaction = await _dbContext.Database.BeginTransactionAsync();
-            //await _dbContext.Database.ExecuteSqlRawAsync("SET IDENTITY_INSERT Product ON;");
             await _dbContext.Product.AddRangeAsync(productList.list);
+
             var result = await _dbContext.SaveChangesAsync();
-            //await _dbContext.Database.ExecuteSqlRawAsync("SET IDENTITY_INSERT Product OFF;");
-            //await transaction.CommitAsync();
 
             return result;
         }

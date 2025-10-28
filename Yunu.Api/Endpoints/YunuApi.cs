@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Yunu.Api.Application;
-using Yunu.Api.Domain;
 
 namespace Yunu.Api.Endpoints
 {
@@ -10,9 +9,17 @@ namespace Yunu.Api.Endpoints
         {
             var api = builder.MapGroup(YunuClient.Prefix);
 
+            api.MapGet(YunuClient.CategoryTreeUri, GetCategoryTree);
             api.MapGet(YunuClient.ProductListUri, GetProductList);
 
             return builder;
+        }
+
+        private static async Task<string> GetCategoryTree([FromServices] IYunuService yunuService)
+        {
+            var result = await yunuService.LoadCategoryTreeAsync();
+
+            return $"Loaded: {result}";
         }
 
         private static async Task<string?> GetProductList(

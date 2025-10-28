@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations.Schema;
 using Yunu.Api.Domain;
 
 namespace Yunu.Api.Infrastructure.Data
@@ -12,6 +11,8 @@ namespace Yunu.Api.Infrastructure.Data
         public DbSet<Product_Fbo_Stocks> Fbo_Stocks { get; set; }
         public DbSet<Product_Fbo_Stocks_By_Delivery_Type> Fbo_Stocks_By_Delivery_Type { get; set; }
         public DbSet<Product_Marketplaces> Product_Marketplaces { get; set; }
+
+        public DbSet<Category> Category { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -36,8 +37,10 @@ namespace Yunu.Api.Infrastructure.Data
             modelBuilder.Entity<Product_Marketplaces>().ToTable("Product_Marketplaces").HasKey(e => e.ProductId);
             modelBuilder.Entity<Product_Marketplaces>().Property(e => e.ProductId).ValueGeneratedNever();
 
-            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<Category>().ToTable("Category").HasKey(e => e.id);
+            modelBuilder.Entity<Category>().Property(e => e.id).ValueGeneratedNever();
 
+            base.OnModelCreating(modelBuilder);
         }
     }
 }

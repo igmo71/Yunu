@@ -8,6 +8,7 @@ namespace Yunu.Api.Application
 {
     public interface IYunuClient
     {
+        Task<CategoryTree?> GetCategoryTreeAsync();
         Task<ProductList?> GetProductListAsync(int page, int perPage, int? scopeId);
     }
 
@@ -19,6 +20,7 @@ namespace Yunu.Api.Application
 
         public const string Prefix = "api";
         public const string ProductListUri = "/v1.0/product/list";
+        public const string CategoryTreeUri = "/v1.0/category/tree";
 
         public YunuClient(IOptions<YunuConfig> options, HttpClient httpClient, ILogger<YunuClient> logger)
         {
@@ -28,6 +30,30 @@ namespace Yunu.Api.Application
             _httpClient = httpClient;
             _httpClient.BaseAddress = new Uri(_yunuConfig.BaseAddress ?? throw new InvalidOperationException("Yunu Base Address not found"));
             _httpClient.DefaultRequestHeaders.Add(HeaderNames.Accept, "application/json");
+        }
+        public async Task<CategoryTree?> GetCategoryTreeAsync()
+        {
+            var source = nameof(GetCategoryTreeAsync);
+            try
+            {
+                var uri = $"{Prefix}{CategoryTreeUri}";
+
+                var response = await _httpClient.GetAsync(uri);
+
+                var responseContent = await response.Content.ReadAsStringAsync();
+
+                if (!response.IsSuccessStatusCode)
+                    _logger.LogError("{Source} {ResponseContent}", source, responseContent);
+
+                var result = JsonSerializer.Deserialize<CategoryTree>(responseContent);
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "{Source}", source);
+                throw;
+            }
         }
 
         public async Task<ProductList?> GetProductListAsync(int page, int perPage, int? scopeId)
