@@ -26,6 +26,9 @@ namespace Yunu.Api.Application
                 _logger.LogError("{Source} Loading Category Tree Failed", source);
                 return 0;
             }
+
+            // TODO: Category CreateOrUpdate
+
             await _dbContext.Category.AddRangeAsync(categoryTree.tree);
 
             var result = await _dbContext.SaveChangesAsync();
@@ -45,6 +48,8 @@ namespace Yunu.Api.Application
                 _logger.LogError("{Source} Loading Product List Failed", source);
                 return 0;
             }
+
+            // TODO: Product CreateOrUpdate
 
             foreach (var product in productList.list)
             {
