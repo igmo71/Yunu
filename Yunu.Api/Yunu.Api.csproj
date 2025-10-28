@@ -17,4 +17,9 @@
     <ProjectReference Include="..\Yunu.ServiceDefaults\Yunu.ServiceDefaults.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Infrastructure\Data\" />
+    <Folder Include="Abstractions\" />
+  </ItemGroup>
+
 </Project>

@@ -1,5 +1,8 @@
-
+using Microsoft.Extensions.Configuration;
 using Scalar.AspNetCore;
+using Yunu.Api.Application;
+using Yunu.Api.Application.YunuAuth;
+using Yunu.Api.Endpoints;
 
 namespace Yunu.Api;
 
@@ -15,6 +18,15 @@ public class Program
 
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
         builder.Services.AddOpenApi();
+
+        builder.Services.Configure<YunuConfig>(builder.Configuration.GetSection(YunuConfig.Section));
+
+        builder.Services.AddSingleton<IYunuAuthService, AuthService>();
+
+        builder.Services.AddTransient<AuthHeaderHandler>();
+
+        builder.Services.AddHttpClient<IYunuClient, YunuClient>()
+            .AddHttpMessageHandler<AuthHeaderHandler>();
 
         var app = builder.Build();
 
@@ -35,6 +47,9 @@ public class Program
         app.UseHttpsRedirection();
 
         app.UseAuthorization();
+
+        app.MapYunuAuthApi();
+        app.MapYunuApi();
 
         var summaries = new[]
         {
