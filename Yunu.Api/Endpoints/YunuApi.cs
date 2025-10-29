@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Yunu.Api.Application;
+using static Yunu.Api.Application.IYunuService;
 
 namespace Yunu.Api.Endpoints
 {
@@ -28,7 +29,7 @@ namespace Yunu.Api.Endpoints
             [FromQuery] int perPage = 500,
             [FromQuery] int? scopeId = null)
         {
-            var result = await yunuService.LoadProductListAsync(page, perPage, scopeId);
+            var result = await yunuService.LoadProductListAsync(new ProductListParameters(page, perPage, scopeId));
 
             return $"Loaded: {result}";
         }

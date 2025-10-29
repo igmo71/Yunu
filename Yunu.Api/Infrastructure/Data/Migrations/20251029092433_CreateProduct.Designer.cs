@@ -11,7 +11,7 @@ using Yunu.Api.Infrastructure.Data;
 namespace Yunu.Api.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251028142204_CreateProduct")]
+    [Migration("20251029092433_CreateProduct")]
     partial class CreateProduct
     {
         /// <inheritdoc />
@@ -23,6 +23,25 @@ namespace Yunu.Api.Infrastructure.Data.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("Yunu.Api.Domain.Category", b =>
+                {
+                    b.Property<int>("id")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("isProductsExists")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("parentId")
+                        .HasColumnType("int");
+
+                    b.HasKey("id");
+
+                    b.ToTable("Category", (string)null);
+                });
 
             modelBuilder.Entity("Yunu.Api.Domain.Product", b =>
                 {
@@ -154,38 +173,6 @@ namespace Yunu.Api.Infrastructure.Data.Migrations
                     b.ToTable("Product", (string)null);
                 });
 
-            modelBuilder.Entity("Yunu.Api.Domain.Product_Fbo_Stock", b =>
-                {
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("total")
-                        .HasColumnType("int");
-
-                    b.HasKey("ProductId");
-
-                    b.ToTable("Product_Fbo_Stock", (string)null);
-                });
-
-            modelBuilder.Entity("Yunu.Api.Domain.Product_Fbo_Stock_By_Delivery_Type", b =>
-                {
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("delivery_type_name")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("delivery_type_color")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("quantity")
-                        .HasColumnType("int");
-
-                    b.HasKey("ProductId", "delivery_type_name");
-
-                    b.ToTable("Product_Fbo_Stock_By_Delivery_Type", (string)null);
-                });
-
             modelBuilder.Entity("Yunu.Api.Domain.Product_Fbo_Stocks", b =>
                 {
                     b.Property<int>("ProductId")
@@ -246,24 +233,6 @@ namespace Yunu.Api.Infrastructure.Data.Migrations
                     b.ToTable("Product_Marketplaces", (string)null);
                 });
 
-            modelBuilder.Entity("Yunu.Api.Domain.Product_Fbo_Stock", b =>
-                {
-                    b.HasOne("Yunu.Api.Domain.Product", null)
-                        .WithOne("fbo_stock")
-                        .HasForeignKey("Yunu.Api.Domain.Product_Fbo_Stock", "ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Yunu.Api.Domain.Product_Fbo_Stock_By_Delivery_Type", b =>
-                {
-                    b.HasOne("Yunu.Api.Domain.Product_Fbo_Stock", null)
-                        .WithMany("by_delivery_type")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Yunu.Api.Domain.Product_Fbo_Stocks", b =>
                 {
                     b.HasOne("Yunu.Api.Domain.Product", null)
@@ -293,16 +262,9 @@ namespace Yunu.Api.Infrastructure.Data.Migrations
 
             modelBuilder.Entity("Yunu.Api.Domain.Product", b =>
                 {
-                    b.Navigation("fbo_stock");
-
                     b.Navigation("fbo_stocks");
 
                     b.Navigation("marketplaces");
-                });
-
-            modelBuilder.Entity("Yunu.Api.Domain.Product_Fbo_Stock", b =>
-                {
-                    b.Navigation("by_delivery_type");
                 });
 
             modelBuilder.Entity("Yunu.Api.Domain.Product_Fbo_Stocks", b =>

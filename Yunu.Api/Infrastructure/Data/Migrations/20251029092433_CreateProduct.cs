@@ -11,6 +11,20 @@ namespace Yunu.Api.Infrastructure.Data.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "Category",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "int", nullable: false),
+                    name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    parentId = table.Column<int>(type: "int", nullable: false),
+                    isProductsExists = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Category", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Product",
                 columns: table => new
                 {
@@ -62,24 +76,6 @@ namespace Yunu.Api.Infrastructure.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Product_Fbo_Stock",
-                columns: table => new
-                {
-                    ProductId = table.Column<int>(type: "int", nullable: false),
-                    total = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Product_Fbo_Stock", x => x.ProductId);
-                    table.ForeignKey(
-                        name: "FK_Product_Fbo_Stock_Product_ProductId",
-                        column: x => x.ProductId,
-                        principalTable: "Product",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Product_Fbo_Stocks",
                 columns: table => new
                 {
@@ -121,26 +117,6 @@ namespace Yunu.Api.Infrastructure.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Product_Fbo_Stock_By_Delivery_Type",
-                columns: table => new
-                {
-                    ProductId = table.Column<int>(type: "int", nullable: false),
-                    delivery_type_name = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    delivery_type_color = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    quantity = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Product_Fbo_Stock_By_Delivery_Type", x => new { x.ProductId, x.delivery_type_name });
-                    table.ForeignKey(
-                        name: "FK_Product_Fbo_Stock_By_Delivery_Type_Product_Fbo_Stock_ProductId",
-                        column: x => x.ProductId,
-                        principalTable: "Product_Fbo_Stock",
-                        principalColumn: "ProductId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Product_Fbo_Stocks_By_Delivery_Type",
                 columns: table => new
                 {
@@ -165,16 +141,13 @@ namespace Yunu.Api.Infrastructure.Data.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Product_Fbo_Stock_By_Delivery_Type");
+                name: "Category");
 
             migrationBuilder.DropTable(
                 name: "Product_Fbo_Stocks_By_Delivery_Type");
 
             migrationBuilder.DropTable(
                 name: "Product_Marketplaces");
-
-            migrationBuilder.DropTable(
-                name: "Product_Fbo_Stock");
 
             migrationBuilder.DropTable(
                 name: "Product_Fbo_Stocks");

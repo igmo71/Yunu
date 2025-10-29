@@ -1,12 +1,17 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Diagnostics.CodeAnalysis;
 using Yunu.Api.Infrastructure.Data;
+using static Yunu.Api.Application.IYunuService;
 
 namespace Yunu.Api.Application
 {
     public interface IYunuService
     {
         Task<int> LoadCategoryTreeAsync();
-        Task<int> LoadProductListAsync(int page, int perPage, int? scopeId);
+
+        [SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>")]
+        record ProductListParameters(int page, int perPage, int? scopeId);
+        Task<int> LoadProductListAsync(ProductListParameters parameters);
     }
 
     public class YunuService(IYunuClient yunuClient, AppDbContext dbContext, ILogger<YunuService> logger) : IYunuService
@@ -34,14 +39,13 @@ namespace Yunu.Api.Application
             var result = await _dbContext.SaveChangesAsync();
 
             return result;
-
         }
 
-        public async Task<int> LoadProductListAsync(int page, int perPage, int? scopeId)
+        public async Task<int> LoadProductListAsync(ProductListParameters parameters) // TODO: ProductList Parameters
         {
             var source = nameof(LoadProductListAsync);
 
-            var productList = await _yunuClient.GetProductListAsync(page, perPage, scopeId);
+            var productList = await _yunuClient.GetProductListAsync(parameters.page, parameters.perPage, parameters.scopeId);
 
             if (productList is null || productList.list is null || productList.list.Count == 0)
             {
@@ -53,12 +57,6 @@ namespace Yunu.Api.Application
 
             foreach (var product in productList.list)
             {
-                product.fbo_stock?.ProductId = product.id;
-
-                if (product.fbo_stock?.by_delivery_type is not null)
-                    foreach (var by_delivery_type in product.fbo_stock.by_delivery_type)
-                        by_delivery_type.ProductId = product.id;
-
                 product.fbo_stocks?.ProductId = product.id;
 
                 if (product.fbo_stocks?.by_delivery_type is not null)

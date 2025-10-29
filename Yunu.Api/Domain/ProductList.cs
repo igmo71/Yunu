@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Yunu.Api.Domain;
 
@@ -23,7 +24,9 @@ public class Product
     public int price { get; set; }
     public int oldPrice { get; set; }
     public int quantity { get; set; }
-    public Product_Fbo_Stock? fbo_stock { get; set; }
+
+    // Временно отключим
+    //public Product_Fbo_Stock? fbo_stock { get; set; } 
     public Product_Fbo_Stocks? fbo_stocks { get; set; }
     public string? photo { get; set; }
     public int reserve { get; set; }
@@ -60,24 +63,25 @@ public class Product
     public float calculated_purchase_price { get; set; }
 }
 
-[SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>")]
-public class Product_Fbo_Stock
-{
-    public int ProductId { get; set; } // My Key
+// Временно отключим
+//[SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>")]
+//public class Product_Fbo_Stock
+//{
+//    public int ProductId { get; set; } // My Key
 
-    public int total { get; set; }
-    public List<Product_Fbo_Stock_By_Delivery_Type>? by_delivery_type { get; set; }
-}
+//    public int total { get; set; }
+//    public List<Product_Fbo_Stock_By_Delivery_Type>? by_delivery_type { get; set; }
+//}
 
-[SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>")]
-public class Product_Fbo_Stock_By_Delivery_Type
-{
-    public int ProductId { get; set; } // My Key
+//[SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>")]
+//public class Product_Fbo_Stock_By_Delivery_Type
+//{
+//    public int ProductId { get; set; } // My Key
 
-    public string? delivery_type_name { get; set; }
-    public string? delivery_type_color { get; set; }
-    public int quantity { get; set; }
-}
+//    public string? delivery_type_name { get; set; }
+//    public string? delivery_type_color { get; set; }
+//    public int quantity { get; set; }
+//}
 
 [SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>")]
 public class Product_Fbo_Stocks
@@ -85,6 +89,7 @@ public class Product_Fbo_Stocks
     public int ProductId { get; set; } // My Key
 
     public int total { get; set; }
+
     public List<Product_Fbo_Stocks_By_Delivery_Type>? by_delivery_type { get; set; }
 }
 
