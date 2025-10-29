@@ -38,7 +38,7 @@ public class Program
         builder.Services.AddHttpClient<IYunuClient, YunuClient>()
             .AddHttpMessageHandler<AuthHeaderHandler>();
 
-        builder.Services.AddScoped<IYunuService, YunuService>();
+        builder.Services.AddAppServices();
 
         var app = builder.Build();
 
@@ -61,7 +61,7 @@ public class Program
         app.UseAuthorization();
 
         app.MapYunuAuthApi();
-        app.MapYunuApi();
+        app.MapAppApi();
 
         app.Run();
     }

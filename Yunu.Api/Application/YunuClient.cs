@@ -31,6 +31,7 @@ namespace Yunu.Api.Application
             _httpClient.BaseAddress = new Uri(_yunuConfig.BaseAddress ?? throw new InvalidOperationException("Yunu Base Address not found"));
             _httpClient.DefaultRequestHeaders.Add(HeaderNames.Accept, "application/json");
         }
+
         public async Task<CategoryTree?> GetCategoryTreeAsync()
         {
             var source = nameof(GetCategoryTreeAsync);

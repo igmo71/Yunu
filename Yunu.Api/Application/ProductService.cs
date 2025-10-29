@@ -1,45 +1,23 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Diagnostics.CodeAnalysis;
 using Yunu.Api.Infrastructure.Data;
-using static Yunu.Api.Application.IYunuService;
 
 namespace Yunu.Api.Application
 {
-    public interface IYunuService
-    {
-        Task<int> LoadCategoryTreeAsync();
+    [SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>")]
+    public record ProductListParameters(int page, int perPage, int? scopeId);
 
-        [SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>")]
-        record ProductListParameters(int page, int perPage, int? scopeId);
+    public interface IProductService
+    {
         Task<int> LoadProductListAsync(ProductListParameters parameters);
+        Task<int> ClearProductListAsync();        
     }
 
-    public class YunuService(IYunuClient yunuClient, AppDbContext dbContext, ILogger<YunuService> logger) : IYunuService
+    public class ProductService(IYunuClient yunuClient, AppDbContext dbContext, ILogger<ProductService> logger) : IProductService
     {
         private readonly IYunuClient _yunuClient = yunuClient;
         private readonly AppDbContext _dbContext = dbContext;
-        private readonly ILogger<YunuService> _logger = logger;
-
-        public async Task<int> LoadCategoryTreeAsync()
-        {
-            var source = nameof(LoadCategoryTreeAsync);
-
-            var categoryTree = await _yunuClient.GetCategoryTreeAsync();
-
-            if (categoryTree is null || categoryTree.tree is null || categoryTree.tree.Count == 0)
-            {
-                _logger.LogError("{Source} Loading Category Tree Failed", source);
-                return 0;
-            }
-
-            // TODO: Category CreateOrUpdate
-
-            await _dbContext.Category.AddRangeAsync(categoryTree.tree);
-
-            var result = await _dbContext.SaveChangesAsync();
-
-            return result;
-        }
+        private readonly ILogger<ProductService> _logger = logger;        
 
         public async Task<int> LoadProductListAsync(ProductListParameters parameters) // TODO: ProductList Parameters
         {
@@ -67,6 +45,13 @@ namespace Yunu.Api.Application
             await _dbContext.Product.AddRangeAsync(productList.list);
 
             var result = await _dbContext.SaveChangesAsync();
+
+            return result;
+        }
+
+        public async Task<int> ClearProductListAsync()
+        {
+            var result = await _dbContext.Product.ExecuteDeleteAsync();
 
             return result;
         }
