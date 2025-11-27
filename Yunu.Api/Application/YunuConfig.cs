@@ -9,7 +9,7 @@ namespace Yunu.Api.Application
         public string? BaseAddress { get; set; }
         public int ScopeId { get; set; }
         public LoginRequest? AuthParams { get; set; }
-
         public string? AccountBaseAddress { get; set; }
+        public int DefaultPerPage { get; set; }
     }
 }

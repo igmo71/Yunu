@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Scalar.AspNetCore;
 using Yunu.Api.Application;
+using Yunu.Api.Common;
 using Yunu.Api.Domain;
 
 namespace Yunu.Api.Endpoints
@@ -9,13 +10,13 @@ namespace Yunu.Api.Endpoints
     {
         public static IEndpointRouteBuilder MapProductApi(this IEndpointRouteBuilder builder)
         {
-            var api = builder.MapGroup(YunuClient.Prefix);
+            var api = builder.MapGroup(AppRouting.Prefix);
 
-            api.MapGet(YunuClient.ProductListUri, LoadProductList)
+            api.MapGet(AppRouting.ProductListUri, LoadProductList)
                 .WithName(nameof(LoadProductList))
                 .WithDescription("Load Product List")
                 .WithTags(nameof(Product));
-            api.MapDelete(YunuClient.ProductListUri, ClearProductList)
+            api.MapDelete(AppRouting.ProductListUri, ClearProductList)
                 .WithName(nameof(ClearProductList))
                 .WithDescription("Clear Product List")
                 .WithTags(nameof(Product));
@@ -23,7 +24,7 @@ namespace Yunu.Api.Endpoints
             return builder;
         }
         
-        private static async Task<string?> LoadProductList([FromServices] IProductService service,
+        private static async Task<string> LoadProductList([FromServices] IProductService service,
             [FromQuery] int page = 0,
             [FromQuery] int perPage = 500,
             [FromQuery] int? scopeId = null)

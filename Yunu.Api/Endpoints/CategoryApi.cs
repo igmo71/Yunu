@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Scalar.AspNetCore;
 using Yunu.Api.Application;
+using Yunu.Api.Common;
 using Yunu.Api.Domain;
 
 namespace Yunu.Api.Endpoints
@@ -9,13 +10,13 @@ namespace Yunu.Api.Endpoints
     {
         public static IEndpointRouteBuilder MapCategoryApi(this IEndpointRouteBuilder builder)
         {
-            var api = builder.MapGroup(YunuClient.Prefix);
+            var api = builder.MapGroup(AppRouting.Prefix);
 
-            api.MapGet(YunuClient.CategoryTreeUri, LoadCategoryTree)
+            api.MapGet(AppRouting.CategoryTreeUri, LoadCategoryTree)
                 .WithName(nameof(LoadCategoryTree))
                 .WithDescription("Load Category Tree")
                 .WithTags(nameof(Category));
-            api.MapDelete(YunuClient.CategoryTreeUri, ClearCategoryTree)
+            api.MapDelete(AppRouting.CategoryTreeUri, ClearCategoryTree)
                 .WithName(nameof(ClearCategoryTree))
                 .WithDescription("Clear Category Tree")
                 .WithTags(nameof(Category));

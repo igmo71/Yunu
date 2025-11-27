@@ -1,5 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using System.Diagnostics.CodeAnalysis;
+using Yunu.Api.Common;
+using Yunu.Api.Domain;
 using Yunu.Api.Infrastructure.Data;
 
 namespace Yunu.Api.Application
@@ -13,17 +17,28 @@ namespace Yunu.Api.Application
         Task<int> ClearProductListAsync();        
     }
 
-    public class ProductService(IYunuClient yunuClient, AppDbContext dbContext, ILogger<ProductService> logger) : IProductService
+    public class ProductService(IYunuClient yunuClient, AppDbContext dbContext, IOptions<YunuConfig> options, ILogger<ProductService> logger) : IProductService
     {
         private readonly IYunuClient _yunuClient = yunuClient;
         private readonly AppDbContext _dbContext = dbContext;
+        private readonly YunuConfig _yunuConfig = options.Value;
         private readonly ILogger<ProductService> _logger = logger;        
 
-        public async Task<int> LoadProductListAsync(ProductListParameters parameters) // TODO: ProductList Parameters
-        {
+        public async Task<int> LoadProductListAsync(ProductListParameters parameters)
+        {  // TODO: Доработать цикл постраничной загрузки
             var source = nameof(LoadProductListAsync);
 
-            var productList = await _yunuClient.GetProductListAsync(parameters.page, parameters.perPage, parameters.scopeId);
+            int scopeId = parameters.scopeId is not null ? (int)parameters.scopeId : _yunuConfig.ScopeId;
+
+            var queryParams = new Dictionary<string, string?>
+            {
+                ["page"] = parameters.page.ToString(),
+                ["perPage"] = parameters.perPage.ToString(),
+                ["scopeId"] = parameters.scopeId.ToString(),
+            };
+            var uri = QueryHelpers.AddQueryString($"{AppRouting.Prefix}{AppRouting.ProductListUri}", queryParams);
+
+            var productList = await _yunuClient.GetAsync<ProductList>(uri);
 
             if (productList is null || productList.list is null || productList.list.Count == 0)
             {
@@ -31,7 +46,7 @@ namespace Yunu.Api.Application
                 return 0;
             }
 
-            // TODO: Product CreateOrUpdate
+            _ = await ClearProductListAsync();
 
             foreach (var product in productList.list)
             {

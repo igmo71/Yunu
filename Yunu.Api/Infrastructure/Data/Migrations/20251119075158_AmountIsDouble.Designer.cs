@@ -12,15 +12,15 @@ using Yunu.Api.Infrastructure.Data;
 namespace Yunu.Api.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251029093556_CreateOrder")]
-    partial class CreateOrder
+    [Migration("20251119075158_AmountIsDouble")]
+    partial class AmountIsDouble
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.0-rc.2.25502.107")
+                .HasAnnotation("ProductVersion", "10.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -57,26 +57,13 @@ namespace Yunu.Api.Infrastructure.Data.Migrations
                     b.ToTable("Category", (string)null);
                 });
 
-            modelBuilder.Entity("Yunu.Api.Domain.CurrentStatus", b =>
-                {
-                    b.Property<int>("id")
-                        .HasColumnType("int");
-
-                    b.Property<string>("label")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("id");
-
-                    b.ToTable("CurrentStatus", (string)null);
-                });
-
             modelBuilder.Entity("Yunu.Api.Domain.Delivery", b =>
                 {
                     b.Property<int>("id")
                         .HasColumnType("int");
 
-                    b.Property<int>("amount")
-                        .HasColumnType("int");
+                    b.Property<double?>("amount")
+                        .HasColumnType("float");
 
                     b.HasKey("id");
 
@@ -106,8 +93,8 @@ namespace Yunu.Api.Infrastructure.Data.Migrations
                     b.Property<DateTime>("addedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("amount")
-                        .HasColumnType("int");
+                    b.Property<double?>("amount")
+                        .HasColumnType("float");
 
                     b.Property<string>("departureNumber")
                         .HasColumnType("nvarchar(max)");
@@ -137,16 +124,6 @@ namespace Yunu.Api.Infrastructure.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("id");
-
-                    b.HasIndex("CabinetId");
-
-                    b.HasIndex("CurrentStatusId");
-
-                    b.HasIndex("DeliveryId");
-
-                    b.HasIndex("TransportCompanyId");
-
-                    b.HasIndex("WarehouseId");
 
                     b.ToTable("Order", (string)null);
                 });
@@ -341,6 +318,19 @@ namespace Yunu.Api.Infrastructure.Data.Migrations
                     b.ToTable("Product_Marketplaces", (string)null);
                 });
 
+            modelBuilder.Entity("Yunu.Api.Domain.Status", b =>
+                {
+                    b.Property<int>("id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("label")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("id");
+
+                    b.ToTable("Status", (string)null);
+                });
+
             modelBuilder.Entity("Yunu.Api.Domain.TransportCompany", b =>
                 {
                     b.Property<int>("id")
@@ -399,36 +389,6 @@ namespace Yunu.Api.Infrastructure.Data.Migrations
 
             modelBuilder.Entity("Yunu.Api.Domain.Order", b =>
                 {
-                    b.HasOne("Yunu.Api.Domain.Cabinet", "cabinet")
-                        .WithMany()
-                        .HasForeignKey("CabinetId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Yunu.Api.Domain.CurrentStatus", "currentStatus")
-                        .WithMany()
-                        .HasForeignKey("CurrentStatusId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Yunu.Api.Domain.Delivery", "delivery")
-                        .WithMany()
-                        .HasForeignKey("DeliveryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Yunu.Api.Domain.TransportCompany", "transportCompany")
-                        .WithMany()
-                        .HasForeignKey("TransportCompanyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Yunu.Api.Domain.Warehouse", "warehouse")
-                        .WithMany()
-                        .HasForeignKey("WarehouseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.OwnsOne("Yunu.Api.Domain.Consumer", "consumer", b1 =>
                         {
                             b1.Property<int>("Orderid")
@@ -454,17 +414,7 @@ namespace Yunu.Api.Infrastructure.Data.Migrations
                                 .HasForeignKey("Orderid");
                         });
 
-                    b.Navigation("cabinet");
-
                     b.Navigation("consumer");
-
-                    b.Navigation("currentStatus");
-
-                    b.Navigation("delivery");
-
-                    b.Navigation("transportCompany");
-
-                    b.Navigation("warehouse");
                 });
 
             modelBuilder.Entity("Yunu.Api.Domain.Product_Fbo_Stocks", b =>

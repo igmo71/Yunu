@@ -1,70 +1,68 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Yunu.Api.Domain
+namespace Yunu.Api.Domain;
+
+[SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>")]
+public class OrderList
 {
-    [SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>")]
-    public class OrderList
-    {
-        public List<Order>? list { get; set; }
-        public int total { get; set; }
-        public string? cisExportLink { get; set; }
-        public bool hasDefectiveOrders { get; set; }
-    }
+    public List<Order>? list { get; set; }
+    public int total { get; set; }
+    public string? cisExportLink { get; set; }
+    public bool hasDefectiveOrders { get; set; }
+}
 
-    [SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>")]
-    public class Order
-    {
-        public int id { get; set; }
-        public string? uid { get; set; }
+[SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>")]
+public class Order
+{
+    public int id { get; set; }
+    public string? uid { get; set; }
 
-        public int CurrentStatusId { get; set; } // My Key
-        public CurrentStatus? currentStatus { get; set; }
+    public int CurrentStatusId { get; set; } // My Key
+    [NotMapped] public Status? currentStatus { get; set; }
 
-        [NotMapped]
-        public List<StatusList>? statusList { get; set; }
+    [NotMapped] public List<Status>? statusList { get; set; }
 
-        public DateTime updateDate { get; set; }
-        public DateTime addedDate { get; set; }
-        public string? paymentStatus { get; set; }
-        public int amount { get; set; }
-        public bool isFake { get; set; }
-        
-        public Consumer? consumer { get; set; }
+    public DateTime updateDate { get; set; }
+    public DateTime addedDate { get; set; }
+    public string? paymentStatus { get; set; }
+    public double? amount { get; set; }
+    public bool isFake { get; set; }
 
-        public int TransportCompanyId { get; set; } // My Key
-        public TransportCompany? transportCompany { get; set; }
+    public Consumer? consumer { get; set; }
 
-        public string? departureNumber { get; set; }
-        public string? tracking_number { get; set; }
+    public int TransportCompanyId { get; set; } // My Key
+    [NotMapped] public TransportCompany? transportCompany { get; set; }
 
-        public int DeliveryId { get; set; } // My Key
-        public Delivery? delivery { get; set; }
+    public string? departureNumber { get; set; }
+    public string? tracking_number { get; set; }
 
-        public int WarehouseId { get; set; } // My Key
-        public Warehouse? warehouse { get; set; }
+    public int DeliveryId { get; set; } // My Key
+    [NotMapped] public Delivery? delivery { get; set; }
 
-        public int CabinetId { get; set; } // My Key
-        public Cabinet? cabinet { get; set; }
+    public int WarehouseId { get; set; } // My Key
+    [NotMapped] public Warehouse? warehouse { get; set; }
 
-        public bool fromMarketplace { get; set; }
-        public bool is_allowed_accept_as_defective { get; set; }
-        public int serviceCommission { get; set; }
-    }    
+    public int CabinetId { get; set; } // My Key
+    [NotMapped] public Cabinet? cabinet { get; set; }
 
-    [SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>")]
-    public class Consumer
-    {
-        public string? firstName { get; set; }
-        public string? lastName { get; set; }
-        public string? patronymic { get; set; }
-        public string? phone { get; set; }
-    }
+    public bool fromMarketplace { get; set; }
+    public bool is_allowed_accept_as_defective { get; set; }
+    public int serviceCommission { get; set; }
+}
 
-    [SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>")]
-    public class StatusList
-    {
-        public int id { get; set; }
-        public string? label { get; set; }
-    }
+[SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>")]
+public class Consumer
+{
+    public string? firstName { get; set; }
+    public string? lastName { get; set; }
+    public string? patronymic { get; set; }
+    public string? phone { get; set; }
+}
+
+[SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>")]
+public class Status
+{
+    public int id { get; set; }
+    public string? label { get; set; }
 }

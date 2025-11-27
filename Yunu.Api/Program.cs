@@ -25,7 +25,7 @@ public class Program
         var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
             ?? throw new InvalidOperationException("DefaultConnection Not Found");
 
-        builder.Services.AddDbContext<AppDbContext>(options =>
+        builder.Services.AddDbContextFactory<AppDbContext>(options =>
             options.UseSqlServer(connectionString)
                 .EnableSensitiveDataLogging());
 

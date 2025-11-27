@@ -1,4 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Yunu.Api.Common;
+using Yunu.Api.Domain;
 using Yunu.Api.Infrastructure.Data;
 
 namespace Yunu.Api.Application
@@ -19,7 +21,9 @@ namespace Yunu.Api.Application
         {
             var source = nameof(LoadCategoryTreeAsync);
 
-            var categoryTree = await _yunuClient.GetCategoryTreeAsync();
+            var uri = $"{AppRouting.Prefix}{AppRouting.CategoryTreeUri}";
+
+            var categoryTree = await _yunuClient.GetAsync<CategoryTree>(uri);
 
             if (categoryTree is null || categoryTree.tree is null || categoryTree.tree.Count == 0)
             {
@@ -27,7 +31,7 @@ namespace Yunu.Api.Application
                 return 0;
             }
 
-            // TODO: Category CreateOrUpdate
+            _ = await ClearCategoryTreeAsync();
 
             await _dbContext.Category.AddRangeAsync(categoryTree.tree);
 
@@ -35,6 +39,7 @@ namespace Yunu.Api.Application
 
             return result;
         }
+
         public async Task<int> ClearCategoryTreeAsync()
         {
             var result = await _dbContext.Category.ExecuteDeleteAsync();

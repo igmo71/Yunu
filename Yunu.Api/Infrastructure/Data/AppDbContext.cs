@@ -7,7 +7,7 @@ namespace Yunu.Api.Infrastructure.Data
     {
         public DbSet<Cabinet> Cabinet { get; set; }
         public DbSet<Category> Category { get; set; }
-        public DbSet<CurrentStatus> CurrentStatus { get; set; }
+        public DbSet<Status> CurrentStatus { get; set; }
         public DbSet<Delivery> Delivery { get; set; }
         public DbSet<Order> Order { get; set; }
 
@@ -27,8 +27,8 @@ namespace Yunu.Api.Infrastructure.Data
             modelBuilder.Entity<Category>().ToTable("Category").HasKey(e => e.id);
             modelBuilder.Entity<Category>().Property(e => e.id).ValueGeneratedNever();
 
-            modelBuilder.Entity<CurrentStatus>().ToTable("CurrentStatus").HasKey(e => e.id);
-            modelBuilder.Entity<CurrentStatus>().Property(e => e.id).ValueGeneratedNever();
+            modelBuilder.Entity<Status>().ToTable("Status").HasKey(e => e.id);
+            modelBuilder.Entity<Status>().Property(e => e.id).ValueGeneratedNever();
 
             modelBuilder.Entity<Delivery>().ToTable("Delivery").HasKey(e => e.id);
             modelBuilder.Entity<Delivery>().Property(e => e.id).ValueGeneratedNever();

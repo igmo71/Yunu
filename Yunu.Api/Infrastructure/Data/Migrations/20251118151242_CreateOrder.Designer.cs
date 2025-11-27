@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Yunu.Api.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using Yunu.Api.Infrastructure.Data;
 namespace Yunu.Api.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251118151242_CreateOrder")]
+    partial class CreateOrder
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -59,8 +62,8 @@ namespace Yunu.Api.Infrastructure.Data.Migrations
                     b.Property<int>("id")
                         .HasColumnType("int");
 
-                    b.Property<double?>("amount")
-                        .HasColumnType("float");
+                    b.Property<int?>("amount")
+                        .HasColumnType("int");
 
                     b.HasKey("id");
 
@@ -90,8 +93,8 @@ namespace Yunu.Api.Infrastructure.Data.Migrations
                     b.Property<DateTime>("addedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<double?>("amount")
-                        .HasColumnType("float");
+                    b.Property<int?>("amount")
+                        .HasColumnType("int");
 
                     b.Property<string>("departureNumber")
                         .HasColumnType("nvarchar(max)");

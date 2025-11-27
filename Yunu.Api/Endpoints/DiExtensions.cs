@@ -6,6 +6,7 @@
         {
             builder.MapCategoryApi();
             builder.MapProductApi();
+            builder.MapOrderApi();
 
             return builder;
         }
