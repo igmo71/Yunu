@@ -34,7 +34,7 @@ namespace Yunu.Api.Infrastructure.Data
             modelBuilder.Entity<Delivery>().Property(e => e.id).ValueGeneratedNever();
             modelBuilder.Entity<Delivery>().OwnsOne(e => e.address);
 
-            modelBuilder.Entity<Order>().ToTable("Order").HasKey(e => e.id);
+            modelBuilder.Entity<Order>().ToTable("Order").HasKey(e => new { e.id, e.uid });
             modelBuilder.Entity<Order>().Property(e => e.id).ValueGeneratedNever();
             modelBuilder.Entity<Order>().OwnsOne(e => e.consumer);
 
